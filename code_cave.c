@@ -1,26 +1,13 @@
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <fcntl.h>
+#include "entrypoint.h"
 
-typedef struct	s_offset
-{
-	off_t	prev_head;
-	off_t	prev_end;
-	off_t	current_head;
-	off_t	current_end;
-}	t_offset;
-
-off_t	get_size_offset(off_t head, off_t end)
+static off_t	get_size_offset(off_t head, off_t end)
 {
 	return end - head;
 }
 
-void	update_offset_struct(t_offset *offset, int index)
+static void	update_offset_struct(t_offset *offset, int index)
 {
-	if (offset->prev_head 
-		&& get_size_offset(offset->prev_head, offset->prev_end) < \
+	if (get_size_offset(offset->prev_head, offset->prev_end) < \
 			get_size_offset(offset->current_head, offset->current_end))
 	{
 		offset->prev_head = offset->current_head;
@@ -30,7 +17,7 @@ void	update_offset_struct(t_offset *offset, int index)
 	offset->current_end = index;
 }
 
-off_t	get_carve(char *buffer, off_t file_size)
+static t_offset	get_cave(char *buffer, off_t file_size)
 {
 	t_offset	offset;
 	int			i;
@@ -39,46 +26,26 @@ off_t	get_carve(char *buffer, off_t file_size)
 	memset(&offset, 0, sizeof(offset));
 	while (i < file_size)
 	{
-		if (!buffer[i] && buffer[i - 1])
+		if (buffer[i] == 0x00 && buffer[i - 1] != 0x00)
 			update_offset_struct(&offset, i);
-		else if (!buffer[i])
+		else if (buffer[i] == 0x00)
 			offset.current_end++;
 		i++;
 	}
-	return get_size_offset(offset.prev_head, offset.prev_end);
+	if (get_size_offset(offset.prev_head, offset.prev_end) < \
+			get_size_offset(offset.current_head, offset.current_end))
+	{
+		offset.prev_head = offset.current_head;
+		offset.prev_end = offset.current_end;
+	}
+	return offset;
 }
 
-off_t	code_carve(int fd, off_t file_size)
+t_offset	code_cave(char *buffer, off_t file_size)
 {
-	char	buffer[file_size];
-	off_t	offset;
+	t_offset	offset;
 
-	if (read(fd, buffer, file_size) == -1)
-	{
-		perror("read");
-		close(fd);
-		exit(1);
-	}
-	offset = get_carve(buffer, file_size);
-}
+	offset = get_cave(buffer, file_size);
 
-int	main(int argc, char **argv)
-{
-	int		fd;
-	off_t	file_size;
-	off_t	offset;
-
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		perror("open");
-		return 1;
-	}
-	lseek(fd, 0, SEEK_SET);
-	file_size = lseek(fd, 0, SEEK_END);
-	offset = code_carve(fd, file_size);
-
-	printf("offset = 0x%.08lx\n", offset);
-
-	return 0;
+	return offset;
 }
