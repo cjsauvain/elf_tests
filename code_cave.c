@@ -1,4 +1,4 @@
-#include "entrypoint.h"
+#include "codeInjection.h"
 
 static off_t	get_size_offset(off_t head, off_t end)
 {
@@ -26,7 +26,7 @@ static t_offset	get_cave(char *buffer, off_t file_size)
 	memset(&offset, 0, sizeof(offset));
 	while (i < file_size)
 	{
-		if (buffer[i] == 0x00 && buffer[i - 1] != 0x00)
+		if (buffer[i] == 0x00 && i % 16 == 0)
 			update_offset_struct(&offset, i);
 		else if (buffer[i] == 0x00)
 			offset.current_end++;
@@ -46,6 +46,7 @@ t_offset	code_cave(char *buffer, off_t file_size)
 	t_offset	offset;
 
 	offset = get_cave(buffer, file_size);
+	printf("new offset = %lx\n", offset.prev_head);
 
 	return offset;
 }

@@ -1,17 +1,18 @@
-NAME = entrypoint
+NAME = inject
 
-SRCS =	entrypoint.c		\
-		code_cave.c			\
-		file_operations.c	\
-		get_elf_hdr.c		\
-		modify_entrypoint.c	\
-		InjectCode.c		\
+SRCS =	codeInjection.c			\
+		code_cave.c				\
+		file_operations.c		\
+		get_elf_hdr.c			\
+		modify_entrypoint.c		\
+		InjectCode.c			\
+		makeSectionExecutable.c	\
 
 OBJS_DIR = obj
 
 OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
 
-HEADER = entrypoint.h
+HEADER = codeInjection.h
 
 CC = gcc
 
