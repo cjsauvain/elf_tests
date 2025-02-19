@@ -14,17 +14,21 @@ Elf64_Addr	getImageBase(int fd, Elf64_Ehdr ehdr)
 	return phdr.p_vaddr;
 }
 
-Elf64_Ehdr	modify_entrypoint(int fd, off_t file_size, Elf64_Addr *old_entry)
+Elf64_Ehdr	modify_entrypoint(int fd, Elf64_Addr *old_entry)
 {
-	char		buffer[file_size];
-	//t_offset	offset;
+	off_t		offset;
 	Elf64_Ehdr	ehdr;
 
-	read_file(fd, buffer, file_size);
-	ehdr = get_elf_hdr(buffer);
+	ehdr = get_elf_hdr(fd);
+	offset = getTextSectionCodeCave(fd, ehdr);
+	if (offset == -1)
+	{
+		dprintf(2, "No .text section found\n");
+		close(fd);
+		exit(1);
+	}
 	*old_entry = ehdr.e_entry;
-	//offset = code_cave(buffer, file_size);
-	ehdr.e_entry = offset.prev_head + getImageBase(fd, ehdr);
+	ehdr.e_entry = offset + getImageBase(fd, ehdr);
 	printf("new entrypoint = %lx\n", ehdr.e_entry);
 	write_file(fd, &ehdr);
 

@@ -1,12 +1,11 @@
 NAME = inject
 
-SRCS =	codeInjection.c			\
-		code_cave.c				\
-		file_operations.c		\
-		get_elf_hdr.c			\
-		modify_entrypoint.c		\
-		InjectCode.c			\
-		makeSectionExecutable.c	\
+SRCS =	codeInjection.c				\
+		getTextSectionCodeCave.c	\
+		file_operations.c			\
+		get_elf_hdr.c				\
+		modify_entrypoint.c			\
+		InjectCode.c				\
 
 OBJS_DIR = obj
 

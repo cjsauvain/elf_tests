@@ -1,26 +1,23 @@
 !_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
 !_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
-!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
-!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
-!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
-!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
-!_TAG_PROC_CWD	/nfs/homes/jsauvain/documents/elf_tests/	//
-!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
-!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
-!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
-!_TAG_PROGRAM_VERSION	5.9.0	//
-InjectCode	InjectCode.c	/^void	InjectCode(int fd, Elf64_Ehdr ehdr, Elf64_Addr old_entry)$/;"	f	typeref:typename:void
-code_cave	code_cave.c	/^t_offset	code_cave(char *buffer, off_t file_size)$/;"	f	typeref:typename:t_offset
-getImageBase	modify_entrypoint.c	/^Elf64_Addr	getImageBase(int fd, Elf64_Ehdr ehdr)$/;"	f	typeref:typename:Elf64_Addr
-get_cave	code_cave.c	/^static t_offset	get_cave(char *buffer, off_t file_size)$/;"	f	typeref:typename:t_offset	file:
-get_elf_hdr	get_elf_hdr.c	/^Elf64_Ehdr	get_elf_hdr(char *buffer)$/;"	f	typeref:typename:Elf64_Ehdr
-get_file_size	file_operations.c	/^off_t	get_file_size(int fd)$/;"	f	typeref:typename:off_t
-get_size_offset	code_cave.c	/^static off_t	get_size_offset(off_t head, off_t end)$/;"	f	typeref:typename:off_t	file:
-main	codeInjection.c	/^int	main(int argc, char **argv)$/;"	f	typeref:typename:int
-makeExecutable	makeSectionExecutable.c	/^static void	makeExecutable(int fd, Elf64_Shdr shdr)$/;"	f	typeref:typename:void	file:
-makeSectionExecutable	makeSectionExecutable.c	/^void	makeSectionExecutable(int fd, Elf64_Ehdr ehdr)$/;"	f	typeref:typename:void
-modify_entrypoint	modify_entrypoint.c	/^Elf64_Ehdr	modify_entrypoint(int fd, off_t file_size, Elf64_Addr *old_entry)$/;"	f	typeref:typename:Elf64_Ehdr
-open_file	file_operations.c	/^int	open_file(char *path)$/;"	f	typeref:typename:int
-read_file	file_operations.c	/^void	read_file(int fd, char *buffer, int file_size)$/;"	f	typeref:typename:void
-update_offset_struct	code_cave.c	/^static void	update_offset_struct(t_offset *offset, int index)$/;"	f	typeref:typename:void	file:
-write_file	file_operations.c	/^void	write_file(int fd, Elf64_Ehdr *ehdr)$/;"	f	typeref:typename:void
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+InjectCode	InjectCode.c	/^void	InjectCode(int fd, Elf64_Ehdr ehdr, Elf64_Addr old_entry)$/;"	f
+getCaveOffset	getTextSectionCodeCave.c	/^static off_t	getCaveOffset(int fd, off_t sectionSize)$/;"	f	file:
+getImageBase	modify_entrypoint.c	/^Elf64_Addr	getImageBase(int fd, Elf64_Ehdr ehdr)$/;"	f
+getOffset	getTextSectionCodeCave.c	/^static off_t	getOffset(Elf64_Shdr *shdr, uint16_t shnum, uint32_t text_sh_name)$/;"	f	file:
+getTextSectionCodeCave	getTextSectionCodeCave.c	/^off_t	getTextSectionCodeCave(int fd, Elf64_Ehdr ehdr)$/;"	f
+getTextSectionOffset	getTextSectionCodeCave.c	/^static off_t	getTextSectionOffset(int fd, Elf64_Ehdr ehdr)$/;"	f	file:
+get_cave	getTextSectionCodeCave.c	/^static t_offset	get_cave(char *buffer, off_t sectionSize)$/;"	f	file:
+get_elf_hdr	get_elf_hdr.c	/^Elf64_Ehdr	get_elf_hdr(int fd)$/;"	f
+get_file_size	file_operations.c	/^off_t	get_file_size(int fd)$/;"	f
+get_sh_name	getTextSectionCodeCave.c	/^static off_t	get_sh_name(int fd, Elf64_Shdr shstrtab)$/;"	f	file:
+get_size_offset	getTextSectionCodeCave.c	/^static off_t	get_size_offset(off_t head, off_t end)$/;"	f	file:
+main	codeInjection.c	/^int	main(int argc, char **argv)$/;"	f
+modify_entrypoint	modify_entrypoint.c	/^Elf64_Ehdr	modify_entrypoint(int fd, Elf64_Addr *old_entry)$/;"	f
+open_file	file_operations.c	/^int	open_file(char *path)$/;"	f
+read_file	file_operations.c	/^void	read_file(int fd, char *buffer, int file_size)$/;"	f
+update_offset_struct	getTextSectionCodeCave.c	/^static void	update_offset_struct(t_offset *offset, int index)$/;"	f	file:
+write_file	file_operations.c	/^void	write_file(int fd, Elf64_Ehdr *ehdr)$/;"	f

@@ -18,13 +18,11 @@ typedef struct	s_offset
 
 int 		open_file(char *path);
 void    	read_file(int fd, char *buffer, int file_size);
-off_t   	get_file_size(int fd);
-t_offset    code_cave(char *buffer, off_t file_size);
-Elf64_Ehdr  get_elf_hdr(char *buffer);
-Elf64_Ehdr	modify_entrypoint(int fd, off_t file_size, Elf64_Addr *old_entry);
+Elf64_Ehdr  get_elf_hdr(int fd);
+Elf64_Ehdr	modify_entrypoint(int fd, Elf64_Addr *old_entry);
 void		write_file(int fd, Elf64_Ehdr *ehdr);
 void		InjectCode(int fd, Elf64_Ehdr ehdr, Elf64_Addr old_entry);
-void		makeSectionExecutable(int fd, Elf64_Ehdr ehdr);
 Elf64_Addr	getImageBase(int fd, Elf64_Ehdr ehdr);
+off_t		getTextSectionCodeCave(int fd, Elf64_Ehdr ehdr);
 
 #endif
