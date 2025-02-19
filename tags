@@ -4,13 +4,16 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-code_cave	code_cave.c	/^t_offset	code_cave(int fd, char *buffer, off_t file_size)$/;"	f
+code_cave	code_cave.c	/^t_offset	code_cave(char *buffer, off_t file_size)$/;"	f
+getImageBase	modify_entrypoint.c	/^off_t	getImageBase(int fd, Elf64_Ehdr ehdr)$/;"	f
 get_cave	code_cave.c	/^static t_offset	get_cave(char *buffer, off_t file_size)$/;"	f	file:
 get_elf_hdr	get_elf_hdr.c	/^Elf64_Ehdr	get_elf_hdr(char *buffer)$/;"	f
 get_file_size	file_operations.c	/^off_t	get_file_size(int fd)$/;"	f
 get_size_offset	code_cave.c	/^static off_t	get_size_offset(off_t head, off_t end)$/;"	f	file:
 main	entrypoint.c	/^int	main(int argc, char **argv)$/;"	f
-modify_entrypoint	entrypoint.c	/^void	modify_entrypoint(int fd, off_t file_size)$/;"	f
+main	hello_world.c	/^int main(void)$/;"	f
+modify_entrypoint	modify_entrypoint.c	/^void	modify_entrypoint(int fd, off_t file_size)$/;"	f
 open_file	file_operations.c	/^int	open_file(char *path)$/;"	f
 read_file	file_operations.c	/^void	read_file(int fd, char *buffer, int file_size)$/;"	f
 update_offset_struct	code_cave.c	/^static void	update_offset_struct(t_offset *offset, int index)$/;"	f	file:
+write_file	file_operations.c	/^void	write_file(int fd, Elf64_Ehdr *ehdr)$/;"	f

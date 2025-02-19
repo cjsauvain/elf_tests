@@ -21,4 +21,8 @@ void    	read_file(int fd, char *buffer, int file_size);
 off_t   	get_file_size(int fd);
 t_offset    code_cave(char *buffer, off_t file_size);
 Elf64_Ehdr  get_elf_hdr(char *buffer);
+Elf64_Ehdr	modify_entrypoint(int fd, off_t file_size);
+void		write_file(int fd, Elf64_Ehdr *ehdr);
+void		InjectCode(int fd, Elf64_Ehdr ehdr);
+
 #endif

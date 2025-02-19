@@ -4,6 +4,8 @@ SRCS =	entrypoint.c		\
 		code_cave.c			\
 		file_operations.c	\
 		get_elf_hdr.c		\
+		modify_entrypoint.c	\
+		InjectCode.c		\
 
 OBJS_DIR = obj
 
