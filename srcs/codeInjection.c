@@ -10,6 +10,7 @@ int	main(int argc, char **argv)
 	fd = open_file(argv[1]);
 	lseek(fd, 0, SEEK_SET);
 	ehdr = modify_entrypoint(fd, &old_entry);
+	old_entry = 0; //REMOVE
 	InjectCode(fd, ehdr, old_entry);
 	
 	return 0;

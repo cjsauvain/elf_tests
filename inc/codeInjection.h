@@ -8,6 +8,9 @@
 #include <fcntl.h>
 #include <elf.h>
 
+# define	SHELLCODE_PATH	"injected_code/injected_code.o"
+# define	ENTRYPOINT_POS	546
+
 typedef struct	s_offset
 {
 	off_t	prev_head;
@@ -24,5 +27,7 @@ void		write_file(int fd, Elf64_Ehdr *ehdr);
 void		InjectCode(int fd, Elf64_Ehdr ehdr, Elf64_Addr old_entry);
 Elf64_Addr	getImageBase(int fd, Elf64_Ehdr ehdr);
 off_t		getTextSectionCodeCave(int fd, Elf64_Ehdr ehdr);
+void		injectWoodySection(int fd, Elf64_Ehdr ehdr, char *shellcode);
+void		change_PHT_position(int fd, Elf64_Ehdr *ehdr);
 
 #endif

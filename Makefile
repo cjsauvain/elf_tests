@@ -1,32 +1,46 @@
+#Executable Name
 NAME = inject
 
-SRCS =	codeInjection.c				\
+#Directories
+SRCS_DIR = srcs
+OBJS_DIR = obj
+INC_DIR  = inc
+
+#Sources / Headers
+SRC =	codeInjection.c				\
 		getTextSectionCodeCave.c	\
 		file_operations.c			\
 		get_elf_hdr.c				\
 		modify_entrypoint.c			\
 		InjectCode.c				\
 
-OBJS_DIR = obj
+SRC_INJECT_WOODY_SECTION =	InjectWoodySection.c	\
+							change_PHT_position.c	\
 
-OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
+SRCS =	$(addprefix $(SRCS_DIR)/, $(SRC))											\
+		$(addprefix $(SRCS_DIR)/InjectWoodySection/, $(SRC_INJECT_WOODY_SECTION))	\
 
-HEADER = codeInjection.h
+HEADER = $(INC_DIR)/codeInjection.h
 
+#Objects
+OBJS = $(subst $(SRCS_DIR)/,,$(SRCS:%.c=$(OBJS_DIR)/%.o))
+
+#Compilation
 CC = gcc
-
 CFLAGS = -Wall -Werror -Wextra -g
+INC_FOLDER = -I $(INC_DIR)
 
-$(OBJS_DIR)/%.o: %.c $(HEADER)
-	$(CC) $(CFLAGS) -c $< -o $@
+#Rules
+$(OBJS_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADER)
+	$(CC) $(CFLAGS) $(INC_FOLDER) -c $< -o $@
 
 all: $(NAME)
 
 $(OBJS_DIR):
-	mkdir $(OBJS_DIR)
+	mkdir -p $(OBJS_DIR)/InjectWoodySection
 
 $(NAME): $(OBJS_DIR) $(OBJS)
-	$(CC) $(OBJS) -o $(NAME)
+	$(CC) $(OBJS) $(INC_FOLDER) -o $(NAME)
 
 clean:
 	rm -rf $(OBJS_DIR)
