@@ -29,7 +29,6 @@ off_t	get_file_size(int fd)
 
 	lseek(fd, 0, SEEK_SET);
 	file_size = lseek(fd, 0, SEEK_END);
-	lseek(fd, 0, SEEK_SET);
 
 	return file_size;
 }

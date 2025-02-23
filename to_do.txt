@@ -1,0 +1,29 @@
+
+
+						*************************************************
+						***  Refer to Practical Binary Analysis Book  ***
+						*************************************************
+
+
+-Modify entrypoint so it points to injected code
+
+-Inject code at end of binary
+
+-Overwrite PT_NOTE entry in program header 
+ to make an entry for new PT_LOAD 
+ (that contains .inject section) segment by:
+ 	*Updating ->	p_type = PT_LOAD
+					p_offset = .inject offset
+					p_vaddr = .inject addr
+					p_filesz = .inject size
+					p_memsz = .inject size
+					p_flags = PF_R | PF_X
+					p_align = 0x1000
+
+-Overwrite .note.* entry in section header to make an entry for new .inject section by:
+ 	*Updating ->	sh_type = SHT_PROGBITS
+					sh_addr = .inject addr
+					sh_offset = .inject offset
+					sh_size = .inject size
+					sh_addralign = 16
+					sh_flags = SHF_ALLOC | SHF_EXECINSTR

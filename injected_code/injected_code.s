@@ -1,19 +1,18 @@
 bits 64
 
-section .text
+section .woody
     global _woody
 
 _woody:
-	xor rax, rax
-	mov	rdi, 1
-	mov	rsi, msg
-	mov	rdx, len
-	mov	rax, 1
+	xor 	rax, rax
+	mov		rdi, 1
+	lea		rsi, [rel msg]
+	mov		rdx, len
+	mov		rax, 1
 	syscall
-	xor	rax, rax
-	mov rax, 0x401650
-	jmp rax
+	mov		r8, 0x401720
+	jmp		r8
 
 section .data
-	msg	db "...WOODY...\n"
+	msg	db "....WOODY....", 0xa
 	len	equ $-msg

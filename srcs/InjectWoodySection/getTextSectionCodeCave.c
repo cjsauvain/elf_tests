@@ -53,28 +53,16 @@ static off_t	getCaveOffset(int fd, off_t sectionSize)
 	return offset.prev_head;
 }
 
-static off_t	get_sh_name(int fd, Elf64_Shdr shstrtab)
+static off_t	getOffset(int fd, uint16_t e_shnum, Elf64_Off e_shoff, \
+					uint32_t sh_name, off_t *sectionSize)
 {
-	uint64_t	i;
-	char		shstrtab_data[shstrtab.sh_size];
+	Elf64_Shdr	shdr[e_shnum];
 
-	lseek(fd, shstrtab.sh_offset, SEEK_SET);
-	read(fd, shstrtab_data, shstrtab.sh_size);
-	i = 0;
-	while (i < shstrtab.sh_size)
+	lseek(fd, e_shoff, SEEK_SET);
+	read(fd, &shdr, sizeof(shdr));
+	for (int i = 0; i < e_shnum; i++)
 	{
-		if (!strcmp(&shstrtab_data[i], ".text"))
-			return i;
-		i += strlen(shstrtab_data + i) + 1;
-	}
-	return -1;
-}
-
-static off_t	getOffset(Elf64_Shdr *shdr, uint16_t shnum, uint32_t text_sh_name, off_t *sectionSize)
-{
-	for (int i = 0; i < shnum; i++)
-	{
-		if (shdr[i].sh_name == text_sh_name)
+		if (shdr[i].sh_name == sh_name)
 		{
 			*sectionSize = shdr[i].sh_size;
 			return shdr[i].sh_offset;
@@ -83,20 +71,14 @@ static off_t	getOffset(Elf64_Shdr *shdr, uint16_t shnum, uint32_t text_sh_name, 
 	return -1;
 }
 
-static off_t	getTextSectionOffset(int fd, Elf64_Ehdr ehdr, off_t *sectionSize)
+static off_t	getSectionOffset(int fd, Elf64_Ehdr ehdr, char *sh_name_str, off_t *sectionSize)
 {
-	Elf64_Shdr	shdr[ehdr.e_shnum];
-	Elf64_Shdr	shstrtab;
-	off_t		text_sh_name;
+	off_t		sh_name;
 
-	lseek(fd, ehdr.e_shoff, SEEK_SET);
-	read(fd, &shdr, sizeof(shdr));
-	shstrtab = shdr[ehdr.e_shstrndx];
-
-	text_sh_name = get_sh_name(fd, shstrtab);
-	if (text_sh_name == -1)
+	sh_name = get_sh_name(fd, ehdr, sh_name_str);
+	if (sh_name == -1)
 		return -1;
-	return getOffset(shdr, ehdr.e_shnum, text_sh_name, sectionSize);
+	return getOffset(fd, ehdr.e_shnum, ehdr.e_shoff, sh_name, sectionSize);
 }
 
 off_t	getTextSectionCodeCave(int fd, Elf64_Ehdr ehdr)
@@ -105,7 +87,7 @@ off_t	getTextSectionCodeCave(int fd, Elf64_Ehdr ehdr)
 	off_t	sectionSize = 0;
 	off_t	caveOffset;
 
-	textSectionOffset = getTextSectionOffset(fd, ehdr, &sectionSize);
+	textSectionOffset = getSectionOffset(fd, ehdr, ".text", &sectionSize);
 	if (textSectionOffset == -1)
 		return -1;
 	lseek(fd, textSectionOffset, SEEK_SET);

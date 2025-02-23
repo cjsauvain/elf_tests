@@ -22,12 +22,13 @@ typedef struct	s_offset
 int 		open_file(char *path);
 void    	read_file(int fd, char *buffer, int file_size);
 Elf64_Ehdr  get_elf_hdr(int fd);
-Elf64_Ehdr	modify_entrypoint(int fd, Elf64_Addr *old_entry);
+void		modify_entrypoint(int fd);
 void		write_file(int fd, Elf64_Ehdr *ehdr);
-void		InjectCode(int fd, Elf64_Ehdr ehdr, Elf64_Addr old_entry);
+off_t   	get_file_size(int fd);
+void		InjectCode(int fd);
+off_t		get_sh_name(int fd, Elf64_Ehdr ehdr, char *sh_name_str);
 Elf64_Addr	getImageBase(int fd, Elf64_Ehdr ehdr);
 off_t		getTextSectionCodeCave(int fd, Elf64_Ehdr ehdr);
-void		injectWoodySection(int fd, Elf64_Ehdr ehdr, char *shellcode);
-void		change_PHT_position(int fd, Elf64_Ehdr *ehdr);
+void 		injectAtEndOfFile(int fd, char *shellcode, int shellcode_len);
 
 #endif

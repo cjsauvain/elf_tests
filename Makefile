@@ -7,15 +7,17 @@ OBJS_DIR = obj
 INC_DIR  = inc
 
 #Sources / Headers
-SRC =	codeInjection.c				\
-		getTextSectionCodeCave.c	\
-		file_operations.c			\
-		get_elf_hdr.c				\
-		modify_entrypoint.c			\
-		InjectCode.c				\
+SRC =	main.c				\
+		file_operations.c	\
+		get_elf_hdr.c		\
+		modify_entrypoint.c	\
+		get_sh_name.c		\
+		getImageBase.c		\
 
-SRC_INJECT_WOODY_SECTION =	InjectWoodySection.c	\
-							change_PHT_position.c	\
+SRC_INJECT_WOODY_SECTION =	getTextSectionCodeCave.c	\
+							InjectCode.c				\
+							injectAtEndOfFile.c			\
+							injectIntoExistingSection.c	\
 
 SRCS =	$(addprefix $(SRCS_DIR)/, $(SRC))											\
 		$(addprefix $(SRCS_DIR)/InjectWoodySection/, $(SRC_INJECT_WOODY_SECTION))	\
