@@ -14,9 +14,12 @@ _woody:
 	xor		rdi, rdi
 	xor		rsi, rsi
 	xor		rdx, rdx
-	mov		r8, 0x401720
+	mov		r8, 0x555555555050
 	jmp		r8
 
 section .data
 	msg	db "....WOODY....", 0xa
 	len	equ $-msg
+
+section .init_array
+    dq _woody
