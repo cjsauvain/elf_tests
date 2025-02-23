@@ -10,6 +10,10 @@ _woody:
 	mov		rdx, len
 	mov		rax, 1
 	syscall
+	xor		rax, rax
+	xor		rdi, rdi
+	xor		rsi, rsi
+	xor		rdx, rdx
 	mov		r8, 0x401720
 	jmp		r8
 
