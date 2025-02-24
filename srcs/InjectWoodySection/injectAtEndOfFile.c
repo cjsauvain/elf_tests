@@ -18,7 +18,7 @@ static void	updateProgramHeaderTable(int fd, off_t file_size, Elf64_Ehdr ehdr, i
 	{
 		phdr.p_type = PT_LOAD;
 		phdr.p_offset = file_size;
-		phdr.p_vaddr = file_size + getImageBase(fd, ehdr);
+		phdr.p_vaddr = file_size/* + getImageBase(fd, ehdr)*/;
 		//phdr.p_vaddr = 0x500000;
 		phdr.p_paddr = phdr.p_vaddr;
 		phdr.p_filesz = shellcode_len;
@@ -48,7 +48,7 @@ static uint32_t	updateSectionHeaderTable(int fd, off_t file_size, Elf64_Ehdr ehd
 	if (type == SHT_NOTE)
 	{
 		shdr.sh_type = SHT_PROGBITS;
-		shdr.sh_addr = file_size + getImageBase(fd, ehdr);
+		shdr.sh_addr = file_size/* + getImageBase(fd, ehdr)*/;
 		shdr.sh_offset = file_size;
 		shdr.sh_size = shellcode_len;
 		shdr.sh_addralign = 16;
