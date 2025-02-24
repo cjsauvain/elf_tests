@@ -126,6 +126,8 @@ void injectAtEndOfFile(int fd, char *shellcode, int shellcode_len)
 
 	ehdr = get_elf_hdr(fd);
 	file_size = get_file_size(fd);
+	if (!shellcode)
+		return;
 	write(fd, shellcode, shellcode_len);
 	updateProgramHeaderTable(fd, file_size, ehdr, shellcode_len);
 	sh_name = updateSectionHeaderTable(fd, file_size, ehdr, shellcode_len);

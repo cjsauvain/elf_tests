@@ -28,15 +28,19 @@ HEADER = $(INC_DIR)/codeInjection.h
 OBJS = $(subst $(SRCS_DIR)/,,$(SRCS:%.c=$(OBJS_DIR)/%.o))
 
 #Compilation
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra -g
+CC = clang
+CFLAGS = -Wall -Werror -Wextra -g -std=c23 -Wno-unused-result
 INC_FOLDER = -I $(INC_DIR)
 
 #Rules
+all: $(NAME)
+
+test:
+	clang -o test-dyna test.c
+	nix-shell -p pkgs.glibc.static --command 'clang -static -o test-static test.c'
+
 $(OBJS_DIR)/%.o:$(SRCS_DIR)/%.c $(HEADER)
 	$(CC) $(CFLAGS) $(INC_FOLDER) -c $< -o $@
-
-all: $(NAME)
 
 $(OBJS_DIR):
 	mkdir -p $(OBJS_DIR)/InjectWoodySection
@@ -48,8 +52,8 @@ clean:
 	rm -rf $(OBJS_DIR)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) test-static test-dyna
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test
