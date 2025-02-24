@@ -92,24 +92,22 @@ void	InjectCode(int fd)
 //	};
 
 	uint64_t orig_entry = 0x4016c0;
-	Injection(fd, NULL, 0);
-	uint64_t new_entry = (uint64_t)lseek(fd, 0, SEEK_CUR);
+	uint64_t new_entry = (uint64_t)lseek(fd, 0, SEEK_END);
 	if (new_entry == (uint64_t)-1) {
 		perror("lseek");
 		exit(1);
 	}
+	size_t shhdrs_size = sizeof(Elf64_Shdr) * ehdr.e_shnum;
+	new_entry -= shhdrs_size;
 	new_entry += getImageBase(fd, ehdr);
+
 	printf("Original entrypoint: % X\n", orig_entry);
 	printf("New entrypoint: % X\n", new_entry);
 
 	char	shellcode[] = {
-#embed "shellcode.bin"
+		#embed "shellcode.bin"
 	};
 	printf("shellcode: %llu\n", sizeof(shellcode));
-
-	char	*sh = "Je suis le shellcode la";
-	char	*wow = ft_strnstr(sh, "is le", strlen(sh)); 
-	printf("Got: %p (%s)\n", wow, wow);
 
 	char	*start_addr = ft_strnstr(shellcode, "\x8A\x99\xAA\xBB\xCC\xDD\xEE\xFF\0", sizeof(shellcode));
 	char	*woody_addr = ft_strnstr(shellcode, "\x11\x22\x33\x44\x55\x66\x77\x8B\0", sizeof(shellcode));

@@ -22,7 +22,7 @@ typedef struct	s_offset
 int 		open_file(char *path);
 void    	read_file(int fd, char *buffer, int file_size);
 Elf64_Ehdr  get_elf_hdr(int fd);
-void		modify_entrypoint(int fd);
+void		modify_entrypoint(Elf64_Ehdr ehdr);
 void		write_file(int fd, Elf64_Ehdr *ehdr);
 off_t   	get_file_size(int fd);
 void		InjectCode(int fd);

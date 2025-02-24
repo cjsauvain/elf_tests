@@ -51,7 +51,7 @@ static uint32_t	updateSectionHeaderTable(int fd, off_t file_size, Elf64_Ehdr ehd
 		shdr.sh_addr = file_size + getImageBase(fd, ehdr);
 		shdr.sh_offset = file_size;
 		shdr.sh_size = shellcode_len;
-		shdr.sh_addralign = 16;
+		shdr.sh_addralign = 32;
 		shdr.sh_flags = SHF_ALLOC | SHF_EXECINSTR;
 		//lseek(fd, sizeof(shdr) * -1, SEEK_CUR);
 		lseek(fd, ehdr.e_shoff + i * ehdr.e_shentsize, SEEK_SET);
@@ -124,12 +124,54 @@ void injectAtEndOfFile(int fd, char *shellcode, int shellcode_len)
 	off_t		file_size;
 	uint32_t	sh_name;
 
+	// Modify entrypoint + shoffset
 	ehdr = get_elf_hdr(fd);
-	file_size = get_file_size(fd);
-	if (!shellcode)
-		return;
+	ehdr.e_shoff += shellcode_len;
+	ehdr.e_shnum += 1;
+	modify_entrypoint(ehdr);
+
+	file_size = get_file_size(fd); // + shellcode_len;
+
+	// Save shdrs
+	size_t shhdrs_size = sizeof(Elf64_Shdr) * ehdr.e_shnum;
+	lseek(fd, -shhdrs_size, SEEK_END);
+	Elf64_Shdr *shdrs = ft_calloc(ehdr.e_shnum, sizeof(Elf64_Shdr));
+	if (!shdrs) {
+		perror("calloc");
+		exit(1);
+	}
+	read(fd, shdrs, shhdrs_size);
+
+	// Write the shellcode
+	lseek(fd, -shhdrs_size, SEEK_END);
 	write(fd, shellcode, shellcode_len);
-	updateProgramHeaderTable(fd, file_size, ehdr, shellcode_len);
-	sh_name = updateSectionHeaderTable(fd, file_size, ehdr, shellcode_len);
-	update_shstrtab_section(fd, ehdr, sh_name);
+	
+	// Re-write the section header table, changing offsets by shellcode_len
+	for (int i = 0; i < ehdr.e_shnum; i++) {
+		Elf64_Shdr *shdr = &shdrs[i];
+		// shdr->sh_offset -= shellcode_len;
+		write(fd, shdr, sizeof(Elf64_Shdr));
+	}
+	free(shdrs);
+
+	// Write our new segment
+	Elf64_Shdr custom_hdr = (Elf64_Shdr){
+		.sh_name = ".woody_section_header",
+		.sh_type = SHT_PROGBITS,
+		.sh_flags = SHF_ALLOC | SHF_EXECINSTR | SHF_WRITE,
+		.sh_addr = file_size + getImageBase(fd, ehdr),
+		.sh_offset = file_size - shhdrs_size,
+		.sh_size = shellcode_len,
+		.sh_link = 0,
+		.sh_info = 0,
+		.sh_alignaddr = 32,
+		.sh_entsize = 0
+	};
+	write(fd, &custom_hdr, sizeof(Elf64_Shdr));
+
+
+	// updateProgramHeaderTable(fd, file_size, ehdr, shellcode_len);
+	//
+	// sh_name = updateSectionHeaderTable(fd, file_size, ehdr, shellcode_len);
+	// update_shstrtab_section(fd, ehdr, sh_name);
 }

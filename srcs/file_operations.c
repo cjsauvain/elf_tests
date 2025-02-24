@@ -4,7 +4,7 @@ int	open_file(char *path)
 {
 	int	fd;
 
-	fd = open(path, O_RDWR);
+	fd = open(path, O_RDWR | O_APPEND);
 	if (fd == -1)
 	{
 		perror("open");
