@@ -15,6 +15,4 @@
 															        *	-Nb is the number of rows				*
 															        *		(input block length divided by 32)	*
 															        *********************************************	
-																
-																
-																
+
