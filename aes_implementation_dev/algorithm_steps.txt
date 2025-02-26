@@ -1,0 +1,20 @@
+							/******************************************************************/
+							/***						STEPS								***/
+							/******************************************************************/
+
+- Represents the 128 bits as 4x4 matrix
+
+- 128 bits key so 10 rounds + 1 round (initial round)
+
+- Construct state matrix (input array into two-dimensional array representing the matrix s)
+	-> s[r, c] = in[r + 4c] for 0 <= r < 4 and 0 <= c < Nb
+																	*********************************************	
+- Deconstruct state matrix (matrix s into output array)             *	-s is the matrix,						*
+	-> out[r + 4c] = s[r, c] for 0 <= r < 4 and 0 <= c < Nb         *	-r is the row index,					*
+															        *	-c is the column index,					*
+															        *	-Nb is the number of rows				*
+															        *		(input block length divided by 32)	*
+															        *********************************************	
+																
+																
+																
