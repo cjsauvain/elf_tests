@@ -2,9 +2,9 @@
 							/***						STEPS								***/
 							/******************************************************************/
 
-- Represents the 128 bits as 4x4 matrix
+- 128 bits input represented as 4x4 (four 32-bytes words) matrix
 
-- 128 bits key so 10 rounds + 1 round (initial round)
+- 128 bits key is 10 rounds + 1 round (initial round)
 
 - Construct state matrix (input array into two-dimensional array representing the matrix s)
 	-> s[r, c] = in[r + 4c] for 0 <= r < 4 and 0 <= c < Nb
@@ -16,3 +16,27 @@
 															        *		(input block length divided by 32)	*
 															        *********************************************	
 
+
+*************************************************************************************
+*																					*
+*	Cipher(byte input[4*Nb], byte output[4*Nb], word w[Nb*(Nr+1)])					*
+*	begin																			*
+*		byte state[4,Nb]															*
+*		state = input																*
+*																					*
+*		AddRoundKey(state, w[0, Nb-1]) 							// See Sec. 5.1.4   *
+*																					*
+*		for round = 1 step 1 to Nr–1												*
+*			SubBytes(state) 									// See Sec. 5.1.1	*
+*			ShiftRows(state) 									// See Sec. 5.1.2	*
+*			MixColumns(state) 									// See Sec. 5.1.3	*
+*			AddRoundKey(state, w[round*Nb, (round+1)*Nb-1])							*
+*		end for																		*
+*																					*
+*		SubBytes(state)																*
+*		ShiftRows(state)															*
+*		AddRoundKey(state, w[Nr*Nb, (Nr+1)*Nb-1])									*
+*		output = state																*
+*	end																				*
+*																					*
+*************************************************************************************
